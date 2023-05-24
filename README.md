@@ -2,7 +2,7 @@
 
 ### Assignment 1 - Solar System
 
-Play it [here]()
+Play it [here](https://anjansse.github.io/UoL-GP/assignment1/solarSystemTEMPLATE/index.html)
 
 ### Assignment 2 - Asteroid Game
 
