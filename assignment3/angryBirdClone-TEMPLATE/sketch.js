@@ -17,9 +17,19 @@ var birds = [];
 var colors = [];
 var ground;
 var slingshotBird, slingshotConstraint;
-var angle=0;
-var angleSpeed=0;
+var angle = 0;
+var angleSpeed = 0;
 var canvas;
+
+var background;
+
+var obstacles = [];
+
+////////////////////////////////////////////////////////////
+function preload() {
+  bg = loadImage('assets/background2.jpg');
+}
+
 ////////////////////////////////////////////////////////////
 function setup() {
   canvas = createCanvas(1000, 600);
@@ -34,11 +44,14 @@ function setup() {
 
   setupSlingshot();
 
+  setupObstacles();
+
   setupMouseInteraction();
 }
 ////////////////////////////////////////////////////////////
 function draw() {
-  background(0);
+  image(bg, 0, 0, width, height);
+  drawTitle();
 
   Engine.update(engine);
 
@@ -51,26 +64,29 @@ function draw() {
   drawBirds();
 
   drawSlingshot();
+
+  drawObstacles();
 }
 ////////////////////////////////////////////////////////////
 //use arrow keys to control propeller
-function keyPressed(){
-  if (keyCode == LEFT_ARROW){
-    //your code here
+function keyPressed() {
+  if (keyCode == LEFT_ARROW) {
+    angleSpeed += 0.01;
   }
-  else if (keyCode == RIGHT_ARROW){
-    //your code here
+  else if (keyCode == RIGHT_ARROW) {
+    angleSpeed -= 0.01;
   }
 }
+
 ////////////////////////////////////////////////////////////
-function keyTyped(){
+function keyTyped() {
   //if 'b' create a new bird to use with propeller
-  if (key==='b'){
+  if (key === 'b') {
     setupBird();
   }
 
   //if 'r' reset the slingshot
-  if (key==='r'){
+  if (key === 'r') {
     removeFromWorld(slingshotBird);
     removeFromWorld(slingshotConstraint);
     setupSlingshot();
@@ -129,5 +145,14 @@ function drawConstraint(constraint) {
     posB.x + offsetB.x,
     posB.y + offsetB.y
   );
+  pop();
+}
+////////////////////////////////////////////////////////////
+function drawTitle() {
+  push();
+  fill(255);
+  textSize(32);
+  textAlign(CENTER);
+  text("Angry Circles 😡!", width / 2, 50);
   pop();
 }
