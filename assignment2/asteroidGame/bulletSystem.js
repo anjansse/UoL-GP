@@ -1,8 +1,13 @@
 class BulletSystem {
 
-  constructor() {
-    this.bullets = [];
+  constructor(enemy=false) {
+    // ================ I wrote this code ================
     this.velocity = new createVector(0, -5);
+    if (enemy) {
+      this.velocity = new createVector(0, 3);
+    }
+    // ================ End of what I wrote ================
+    this.bullets = [];
     this.diam = 10;
   }
 
@@ -33,11 +38,13 @@ class BulletSystem {
 
   //check if bullets leave the screen and remove them from the array
   edges() {
+    // ================ I wrote this code ================
     for (var i = this.bullets.length - 1; i >= 0; i--) {
       if (this.bullets[i].y < 0) {
         this.bullets.splice(i, 1);
       }
     }
+    // ================ End of code I wrote ================
   }
 
 }
