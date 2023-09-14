@@ -1,6 +1,7 @@
 var imgs = [];
 var avgImg;
 var numOfImages = 30;
+var currentImageIndex = 0;
 
 //////////////////////////////////////////////////////////
 function preload() {
@@ -22,7 +23,7 @@ function setup() {
 //////////////////////////////////////////////////////////
 function draw() {
     background(125);
-    image(imgs[0], 0, 0); 
+    image(imgs[currentImageIndex], 0, 0); 
 
     for (let img of imgs) {
         img.loadPixels();
@@ -60,4 +61,12 @@ function draw() {
     image(avgImg, avgImg.width, 0);
 
     noLoop();
+}
+
+
+//////////////////////////////////////////////////////////
+// New function to handle key presses
+function keyPressed() {
+    currentImageIndex = int(random(numOfImages)); // Update the index with a new random value
+    loop(); // Redraw the canvas
 }
