@@ -12,10 +12,12 @@ var matrix = [
     [1/64, 1/64, 1/64, 1/64, 1/64, 1/64, 1/64, 1/64]
 ];
 
+// ============= I wrote this code ==================
 var sepiaEnabled = true;
 var darkCornersEnabled = true;
 var radialBlurEnabled = true;
 var borderEnabled = true;
+// ===================================================
 
 /////////////////////////////////////////////////////////////////
 function preload() {
@@ -37,6 +39,7 @@ function mousePressed(){
   loop();
 }
 
+// ============= I wrote this code ==================
 function keyPressed() {
   if (key === '1') {
     sepiaEnabled = !sepiaEnabled;
@@ -52,8 +55,11 @@ function keyPressed() {
   }
   loop();
 }
+// ===================================================
 /////////////////////////////////////////////////////////////////
+
 function earlyBirdFilter(img){
+  // ============= I modified this code ==================
   var resultImg = createImage(imgIn.width, imgIn.height);
   if (sepiaEnabled) {
     resultImg = sepiaFilter(imgIn);
@@ -68,8 +74,10 @@ function earlyBirdFilter(img){
     resultImg = borderFilter(resultImg);
   }
   return resultImg;
+  // =====================================================
 }
 
+// ============= I wrote this code ==================
 function sepiaFilter(img) {
   var resultImg = createImage(img.width, img.height);
 
@@ -98,7 +106,9 @@ function sepiaFilter(img) {
   resultImg.updatePixels();
   return resultImg;
 }
+// ===================================================
 
+// ============= I wrote this code ==================
 function darkCorners(img) {
   var resultImg = createImage(img.width, img.height);
   img.loadPixels();
@@ -127,7 +137,9 @@ function darkCorners(img) {
       } else {
         dynLum = map(distance, 450, maxDistance, 0.4, 0);
       }
-      
+
+      dynLum = constrain(dynLum, 0, 1);
+
       var newRed = oldRed * dynLum;
       var newGreen = oldGreen * dynLum;
       var newBlue = oldBlue * dynLum;
@@ -142,7 +154,9 @@ function darkCorners(img) {
   resultImg.updatePixels();
   return resultImg;
 }
+// ===================================================
 
+// ============= I wrote this code ==================
 function radialBlurFilter(img) {
   console.log("radialBlurFilter");
   console.log(mouseX, mouseY);
@@ -176,8 +190,9 @@ function radialBlurFilter(img) {
   resultImg.updatePixels();
   return resultImg;
 }
+// ===================================================
 
-
+// ============= I copied this code from the course material ==================
 function convolution(x, y, matrix, matrixSize, img) {
   var totalRed = 0;
   var totalGreen = 0;
@@ -201,7 +216,9 @@ function convolution(x, y, matrix, matrixSize, img) {
   }
   return [totalRed, totalGreen, totalBlue];
 }
+// ===================================================
 
+// ============= I wrote this code ==================
 function borderFilter(img) {
   var buffer = createGraphics(img.width, img.height);
 
@@ -215,4 +232,5 @@ function borderFilter(img) {
 
   return buffer;
 }
+// ===================================================
 
