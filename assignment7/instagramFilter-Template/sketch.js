@@ -17,7 +17,11 @@ var sepiaEnabled = true;
 var darkCornersEnabled = true;
 var radialBlurEnabled = true;
 var borderEnabled = true;
-// ===================================================
+// ==================================================
+
+// ============= I wrote this code ==================
+var cachedBlurredValues = {};
+// ==================================================
 
 /////////////////////////////////////////////////////////////////
 function preload() {
@@ -25,14 +29,42 @@ function preload() {
 }
 /////////////////////////////////////////////////////////////////
 function setup() {
-    createCanvas((imgIn.width * 2), imgIn.height);
+    createCanvas((imgIn.width * 2), (imgIn.height * 1.5));
 }
 /////////////////////////////////////////////////////////////////
 function draw() {
-    background(125);
-    image(imgIn, 0, 0);
-    image(earlyBirdFilter(imgIn), imgIn.width, 0);
-    noLoop();
+  background(255);
+  image(imgIn, 0, 0);
+  push();
+  fill(125);
+  noStroke();
+  rect(imgIn.width, 0, imgIn.width, imgIn.height);
+  image(earlyBirdFilter(imgIn), imgIn.width, 0);
+  pop();
+  
+  // Draw help instructions
+  push();
+  textAlign(CENTER, CENTER);
+  textSize(24);
+  fill(0);
+  textStyle(BOLD);
+  text("Filter Controls", (imgIn.width), imgIn.height + 50);
+  pop();
+
+  push();
+  textAlign(CENTER, CENTER);
+  textSize(16);
+  fill(0);
+  textStyle(NORMAL);
+  text("Press '1' to toggle Sepia filter\n" +
+       "Press '2' to toggle Dark Corners\n" +
+       "Press '3' to toggle Radial Blur\n" +
+       "Press '4' to toggle Border\n",
+       (imgIn.width / 4) * 3,
+       imgIn.height + 150);
+  pop();
+  
+  noLoop();
 }
 /////////////////////////////////////////////////////////////////
 function mousePressed(){
@@ -58,7 +90,7 @@ function keyPressed() {
 // ===================================================
 /////////////////////////////////////////////////////////////////
 
-function earlyBirdFilter(img){
+function earlyBirdFilter(img) {
   // ============= I modified this code ==================
   var resultImg = createImage(imgIn.width, imgIn.height);
   if (sepiaEnabled) {
@@ -157,21 +189,62 @@ function darkCorners(img) {
 // ===================================================
 
 // ============= I wrote this code ==================
+function isBlurCached() {
+  if (sepiaEnabled && darkCornersEnabled) {
+    if ("sepia and dark corners" in cachedBlurredValues) {
+      return true;
+    } else {
+      return false;
+    }
+  } else if (sepiaEnabled) {
+    if ("sepia" in cachedBlurredValues) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    if ("none" in cachedBlurredValues) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function radialBlurFilter(img) {
-  console.log("radialBlurFilter");
-  console.log(mouseX, mouseY);
   var resultImg = createImage(img.width, img.height);
   img.loadPixels();
   resultImg.loadPixels();
 
   var matrixSize = 8; 
 
+  if (sepiaEnabled && darkCornersEnabled) {
+    var cachedKey = "sepia and dark corners";
+  } else if (sepiaEnabled) {
+    var cachedKey = "sepia";
+  } else {
+    var cachedKey = "none";
+  }
+
+  var mustCompute = isBlurCached() ? false : true;
+
+  // BONUS CODE: initializing the dictionary for caching
+  if (mustCompute) {
+    cachedBlurredValues[cachedKey] = [];
+  }
+
   for (var x = 0; x < img.width; x++) {
     for (var y = 0; y < img.height; y++) {
       var index = (x + y * img.width) * 4;
       
-      var c = convolution(x, y, matrix, matrixSize, img);
-      
+      // BONUS CODE: using either cached values or computing them
+      if (!mustCompute) {
+        var c = cachedBlurredValues[cachedKey][index];
+      } else {
+        var c  = convolution(x, y, matrix, matrixSize, img);
+        cachedBlurredValues[cachedKey][index] = c;
+      }
+      // END BONUS CODE
+
       var distance = dist(x, y, mouseX, mouseY);
       var dynBlur = map(distance, 100, 300, 0, 1);
       dynBlur = constrain(dynBlur, 0, 1);
